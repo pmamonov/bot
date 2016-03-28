@@ -15,17 +15,13 @@ def go(e):
 	root.after_cancel(repeat)
 	print c,
 	if c == 'w':
-		soc.send("set 0 1000\n")
-		soc.send("set 2 1000\n")
+		soc.send("set 0 1000\nset 2 1000\n")
 	elif c == 's':
-		soc.send("set 1 1000\n")
-		soc.send("set 3 1000\n")
+		soc.send("set 1 1000\nset 3 1000\n")
 	elif c == 'a':
-		soc.send("set 0 1000\n")
-		soc.send("set 3 1000\n")
+		soc.send("set 0 1000\nset 3 1000\n")
 	elif c == 'd':
-		soc.send("set 1 1000\n")
-		soc.send("set 2 1000\n")
+		soc.send("set 1 1000\nset 2 1000\n")
 
 	repeat = root.after(500, go, e)
 
