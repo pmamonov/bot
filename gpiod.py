@@ -2,10 +2,6 @@ import os, sys, time, argparse, signal, ctypes, socket, threading
 
 GPIO_PREFIX = "/sys/class/gpio"
 
-PWM_MS = 100
-
-pwm = {}
-
 ipins = (16, 7, 5, 6)
 
 timers = map(lambda i: None, range(len(ipins)))
@@ -52,14 +48,6 @@ def timestamp():
 def tsprint(s):
 	print timestamp() + s
 
-def do_pwm(pwm_id, l, w, p):
-	while pwm[pwm_id] and time.time() < l:
-		for i in p:
-			pins[i].setval(1)
-			time.sleep(w / 1000.)
-			pins[i].setval(0)
-			time.sleep((PWM_MS - w) / 1000.)
-
 def process_cmd(c):
 	ret = "ERROR"
 	tsprint(c)
@@ -79,27 +67,6 @@ def process_cmd(c):
 			out = int(t[1])
 			pins[out].setval(0)
 			ret = "OK"
-		elif t[0] == 'pypwm':
-			l = time.time() + int(t[1]) * 1e-3
-			w = int(t[2])
-			p = []
-			for s in t[3:]:
-				p.append(int(s))
-			pwm_id = 0
-			while pwm_id in pwm.keys():
-				pwm_id += 1
-			t = threading.Thread(target=do_pwm, args=(pwm_id, l, w, p))
-			pwm[pwm_id] = t
-			t.start()
-			ret = "%d" % pwm_id
-		elif t[0] == 'pypwmoff':
-			i = int(t[1])
-			t = pwm[i]
-			pwm[i] = 0
-			t.join()
-			pwm.pop(i)
-			ret = "OK"
-
 	tsprint(ret)
 	return ret
 
