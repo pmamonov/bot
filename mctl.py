@@ -7,30 +7,33 @@ import tkFont
 root = None
 soc = None
 repeat = 0
+down = 0
 
 def go(e):
+	global down
+	down += 1
+	c = e.char
+	_go(c)
+
+def _go(c):
 	global repeat, root
 
-	c = e.char
 	root.after_cancel(repeat)
 	print c,
-	if c == 'w':
-		soc.send("set 0 1000\nset 2 1000\n")
-	elif c == 's':
-		soc.send("set 1 1000\nset 3 1000\n")
-	elif c == 'a':
-		soc.send("set 0 1000\nset 3 1000\n")
-	elif c == 'd':
-		soc.send("set 1 1000\nset 2 1000\n")
-
-	repeat = root.after(500, go, e)
+	if c in "awsd":
+		soc.send(c + "\n")
+		repeat = root.after(250, _go, c)
 
 
 def stop(e):
+	global down
+	if down > 0:
+		down -= 1
+	if down:
+		return
 	root.after_cancel(repeat)
 	print "stop"
-	for i in xrange(4):
-		soc.send("rst %d\n" % i)
+	soc.send("x\n")
 
 soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
