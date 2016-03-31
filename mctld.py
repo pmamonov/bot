@@ -126,11 +126,11 @@ def process_cmd(c):
 			pins[1].setval(1)
 			pins[2].setval(1)
 			pins[3].setval(0)
-		if t[0] in "awsd":
-			pwm_target = 70;
 		if t[0] == 'x':
-			pwm_target = 0;
-		pwm_timestamp = time.time()
+			pins[0].setval(0)
+			pins[1].setval(0)
+			pins[2].setval(0)
+			pins[3].setval(0)
 
 	tsprint(ret)
 	return ret
@@ -196,8 +196,9 @@ soc.listen(1)
 tsprint("Daemon started")
 
 mpwm = pwm(2, 100)
-tpwm = threading.Thread(target=fpwm)
-tpwm.start()
+mpwm.set_dc(70)
+#tpwm = threading.Thread(target=fpwm)
+#tpwm.start()
 
 for i in ipins:
 	pins.append(gpio(i))
