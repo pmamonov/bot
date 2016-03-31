@@ -8,28 +8,30 @@ root = None
 soc = None
 repeat = 0
 down = 0
+keys = []
 
 def go(e):
 	global down
 	down += 1
-	c = e.char
-	_go(c)
+	keys.append(e.char)
+	_go()
 
-def _go(c):
-	global repeat, root
+def _go():
+	global repeat, root, keys
 
 	root.after_cancel(repeat)
-	print c,
+	c = keys[-1]
 	if c in "awsd":
 		soc.send(c + "\n")
-		repeat = root.after(250, _go, c)
+		repeat = root.after(250, _go)
 
 
 def stop(e):
 	global down
-	if down > 0:
-		down -= 1
-	if down:
+	c = e.char
+	if c in keys:
+		keys.pop(keys.index(c))
+	if len(keys):
 		return
 	root.after_cancel(repeat)
 	print "stop"
