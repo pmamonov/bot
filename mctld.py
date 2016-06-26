@@ -3,7 +3,7 @@ import os, sys, time, argparse, signal, ctypes, socket, threading
 GPIO_PREFIX = "/sys/class/gpio"
 PWM_PREFIX = "/sys/class/pwm/pwmchip0"
 
-ipins = (16, 7, 5, 6)
+ipins = (7, 16, 5, 6)
 
 timers = map(lambda i: None, range(len(ipins)))
 
@@ -100,7 +100,7 @@ def tsprint(s):
 	print timestamp() + s
 
 def process_cmd(c):
-	global pwm_target, pwm_timestamp
+	global pwm_target, pwm_timestamp, mpwm
 
 	ret = "OK"
 	tsprint(c)
@@ -196,7 +196,7 @@ soc.listen(1)
 tsprint("Daemon started")
 
 mpwm = pwm(2, 100)
-mpwm.set_dc(70)
+mpwm.set_dc(65)
 #tpwm = threading.Thread(target=fpwm)
 #tpwm.start()
 
