@@ -1,3 +1,15 @@
+# COMMUTATION:
+#
+# GEEGROW L298N		Olinuxino
+#
+# GND			GPIO_CON/2
+# IN4			GPIO_CON/9 (gpio5)
+# IN3			GPIO_CON/7 (gpio6)
+# IN2			GPIO_CON/5 (gpio7)
+# IN1			GPIO_CON/3 (gpio16)
+# VCC			GPIO_CON/37
+# ENA,B			GPIO_CON/22
+
 import os, sys, time, argparse, signal, ctypes, socket, threading
 
 GPIO_PREFIX = "/sys/class/gpio"
