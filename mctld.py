@@ -57,7 +57,7 @@ class gpio:
 	def __init__(self, igpio, pref=GPIO_PREFIX):
 		self.value = []
 		self.direction = []
-		root = "%s/gpio%d" % (pref, i)
+		root = "%s/gpio%d" % (pref, igpio)
 		if not os.path.isdir(root):
 			export = open(pref + "/export", 'w')
 			export.write("%d\n" % igpio)
