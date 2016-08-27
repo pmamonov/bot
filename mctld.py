@@ -16,6 +16,10 @@ GPIO_PREFIX = "/sys/class/gpio"
 PWM_PREFIX = "/sys/class/pwm/pwmchip0"
 
 ipins = (7, 16, 5, 6)
+ipwm = 2
+
+pi_ipins = (11, 12, 13, 15)
+pi_ipwm = 7
 
 timers = map(lambda i: None, range(len(ipins)))
 
@@ -159,6 +163,7 @@ prs.add_argument('-d', dest="daemon",	action="store_true", help='daemonize')
 prs.add_argument('-l', dest="log", metavar='FILE', type=str, help='log file')
 prs.add_argument('-p', dest="port", metavar='PORT', type=int, help='port number to listen',default=6660)
 prs.add_argument('-i', dest="iface", metavar='INTERFACE', type=str, help='hostname or ip adress to listen',default='0.0.0.0')
+prs.add_argument('-t', dest="host", metavar='HOST', type=str, help='host type: olinuxino, raspberry', default="olinuxino")
 args = prs.parse_args()
 
 # daemonize if requested
@@ -207,15 +212,28 @@ soc.listen(1)
 
 tsprint("Daemon started")
 
-mpwm = pwm(2, 100)
-mpwm.set_dc(65)
-#tpwm = threading.Thread(target=fpwm)
-#tpwm.start()
+if args.host == "olinuxino":
+	mpwm = pwm(ipwm, 100)
+	mpwm.set_dc(65)
+	#tpwm = threading.Thread(target=fpwm)
+	#tpwm.start()
 
-for i in ipins:
-	pins.append(gpio(i))
-	pins[-1].setdir("out")
-	pins[-1].setval(0)
+	for i in ipins:
+		pins.append(gpio(i))
+		pins[-1].setdir("out")
+		pins[-1].setval(0)
+
+elif args.host == "raspberry":
+	import pigpio
+
+	mpwm = pigpio.pwm(pi_ipwm, 100)
+	for i in pi_ipins:
+		pins.append(pigpio.gpio(i))
+		pins[-1].setdir("out")
+		pins[-1].setval(0)
+else:
+	tsprint("ERROR: uknown host type '%s'" % args.host)
+	sys.exit(1)
 
 while 1:
 	conn = None
