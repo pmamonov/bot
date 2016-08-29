@@ -23,7 +23,9 @@ class gpio:
 class pwm:
 	def __init__(self, chan, period_us):
 		GPIO.setup(chan, GPIO.OUT)
+		GPIO.output(chan, GPIO.HIGH)
 		self.pwm = GPIO.PWM(chan, 1000000 / period_us)
+		self.pwm.start(0.5)
 		self.period = period_us
 
 	def set_dc(self, dc_us):

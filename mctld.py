@@ -19,7 +19,7 @@ ipins = (7, 16, 5, 6)
 ipwm = 2
 
 pi_ipins = (11, 12, 13, 15)
-pi_ipwm = 7
+pi_ipwm = 16
 
 timers = map(lambda i: None, range(len(ipins)))
 
@@ -227,6 +227,7 @@ elif args.host == "raspberry":
 	import pigpio
 
 	mpwm = pigpio.pwm(pi_ipwm, 100)
+	mpwm.set_dc(100)
 	for i in pi_ipins:
 		pins.append(pigpio.gpio(i))
 		pins[-1].setdir("out")
