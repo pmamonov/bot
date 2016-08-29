@@ -1,1 +1,1 @@
-nc -l -p 6660 | mplayer -demuxer rawvideo -rawvideo w=640:h=480:format=yuy2 -
+nc -l -p 6660 | mplayer -cache 1024 -demuxer lavf --lavfdopts=format=mjpeg -
