@@ -50,6 +50,7 @@ static int              out_buf;
 static int              force_format;
 int			soc;
 struct sockaddr_in	srv;
+char			*target = "192.168.2.135";
 
 static void errno_exit(const char *s)
 {
@@ -70,6 +71,8 @@ static int xioctl(int fh, int request, void *arg)
 
 static void process_image(const void *p, int size)
 {
+	static int i;
+
 	write(soc, p, size);
 }
 
@@ -271,7 +274,7 @@ static void start_capturing(void)
 		perror("ERROR opening socket");
 	memset(&srv, 0, sizeof(srv));
 	srv.sin_family = AF_INET;
-	srv.sin_addr.s_addr = inet_addr("192.168.2.2");
+	srv.sin_addr.s_addr = inet_addr(target);
 	srv.sin_port = htons(6660);
 	ret = connect(soc, (struct sockaddr *)&srv, sizeof(srv));
 	if (ret < 0)
@@ -577,7 +580,7 @@ static void usage(FILE *fp, int argc, char **argv)
                  argv[0], dev_name);
 }
 
-static const char short_options[] = "d:hmruof";
+static const char short_options[] = "d:hmruoft:";
 
 static const struct option
 long_options[] = {
@@ -589,6 +592,7 @@ long_options[] = {
         { "output", no_argument,       NULL, 'o' },
         { "format", no_argument,       NULL, 'f' },
         { "count",  required_argument, NULL, 'c' },
+        { "host",  required_argument, NULL, 't' },
         { 0, 0, 0, 0 }
 };
 
@@ -636,6 +640,10 @@ int main(int argc, char **argv)
 
                 case 'f':
                         force_format++;
+                        break;
+
+                case 't':
+                        target = optarg;
                         break;
 
                 default:
