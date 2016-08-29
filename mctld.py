@@ -21,6 +21,7 @@ ipwm = 2
 pi_ipins = (11, 12, 13, 15)
 pi_ipwm = 16
 
+TURN_SPEED = 80
 timers = map(lambda i: None, range(len(ipins)))
 
 # tcp socket to listen
@@ -123,21 +124,25 @@ def process_cmd(c):
 	t = c.split()
 	if len(t) > 0 and t[0] in "awsdx":
 		if t[0] == 'w':
+			mpwm.set_dc(100)
 			pins[0].setval(1)
 			pins[1].setval(0)
 			pins[2].setval(1)
 			pins[3].setval(0)
 		elif t[0] == 's':
+			mpwm.set_dc(100)
 			pins[0].setval(0)
 			pins[1].setval(1)
 			pins[2].setval(0)
 			pins[3].setval(1)
 		elif t[0] == 'a':
+			mpwm.set_dc(TURN_SPEED)
 			pins[0].setval(1)
 			pins[1].setval(0)
 			pins[2].setval(0)
 			pins[3].setval(1)
 		elif t[0] == 'd':
+			mpwm.set_dc(TURN_SPEED)
 			pins[0].setval(0)
 			pins[1].setval(1)
 			pins[2].setval(1)
